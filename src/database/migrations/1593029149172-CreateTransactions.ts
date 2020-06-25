@@ -22,7 +22,6 @@ export default class CreateTransactions1593029149172
           {
             name: 'title',
             type: 'varchar',
-            isUnique: true,
           },
           {
             name: 'value',
