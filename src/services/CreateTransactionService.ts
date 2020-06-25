@@ -19,7 +19,18 @@ class CreateTransactionService {
     type,
     category,
   }: Request): Promise<Transaction> {
+    const transactionsRepository = getCustomRepository(TransactionsRepository);
     const categoriesRepository = getRepository(Category);
+
+    const { total } = await transactionsRepository.getBalance();
+
+    if (!['income', 'outcome'].includes(type)) {
+      throw new AppError('Transaction type is invalid');
+    }
+
+    if (type === 'outcome' && total < value) {
+      throw new AppError('Your balance is insufficient');
+    }
 
     let category_id = '';
 
@@ -35,18 +46,6 @@ class CreateTransactionService {
       });
 
       category_id = identifiers[0].id;
-    }
-
-    const transactionsRepository = getCustomRepository(TransactionsRepository);
-
-    const { outcome } = await transactionsRepository.getBalance();
-
-    if (!['income', 'outcome'].includes(type)) {
-      throw new AppError('Transaction type is invalid');
-    }
-
-    if (type === 'outcome' && value < outcome) {
-      throw new AppError('Your balance is insufficient');
     }
 
     const transaction = transactionsRepository.create({
