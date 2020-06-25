@@ -1,6 +1,7 @@
-import { getCustomRepository } from 'typeorm';
+import { getRepository, getCustomRepository } from 'typeorm';
 
 import AppError from '../errors/AppError';
+import Category from '../models/Category';
 import Transaction from '../models/Transaction';
 import TransactionsRepository from '../repositories/TransactionsRepository';
 
@@ -18,6 +19,24 @@ class CreateTransactionService {
     type,
     category,
   }: Request): Promise<Transaction> {
+    const categoriesRepository = getRepository(Category);
+
+    let category_id = '';
+
+    const findCategoryByTitle = await categoriesRepository.findOne({
+      where: { title: category },
+    });
+
+    if (findCategoryByTitle) {
+      category_id = findCategoryByTitle.id;
+    } else {
+      const { identifiers } = await categoriesRepository.insert({
+        title: category,
+      });
+
+      category_id = identifiers[0].id;
+    }
+
     const transactionsRepository = getCustomRepository(TransactionsRepository);
 
     const { outcome } = await transactionsRepository.getBalance();
@@ -34,7 +53,7 @@ class CreateTransactionService {
       title,
       value,
       type,
-      category_id: '',
+      category_id,
     });
 
     await transactionsRepository.save(transaction);
