@@ -178,4 +178,4 @@ Esse projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 ---
 
-Feito com 💜 by Jeol Fragoso :wave: [LinkedIn!](https://www.linkedin.com/in/joel-fragoso-0906611a9/)
+Feito com 💜 by Joel Fragoso :wave: [LinkedIn!](https://www.linkedin.com/in/joel-fragoso-0906611a9/)
